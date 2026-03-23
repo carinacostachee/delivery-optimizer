@@ -1,7 +1,9 @@
 import logo from "../icons/logoapp.svg";
 import plus from "../icons/plus.svg";
-
-const Header = () => {
+interface Props {
+  onOpenModal: () => void;
+}
+const Header = ({ onOpenModal }: Props) => {
   return (
     <div className="w-full h-15 md:h-20 bg-white border-b-2 border-gray-200">
       <div className="flex justify-between items-center">
@@ -22,7 +24,10 @@ const Header = () => {
               alt="Plus Icon"
               className="w-[20px] h-[20px] md:w-[30px] md:h-[30px]"
             />
-            <h2 className="font-montserrat font-semibold text-white text-[12px] md:text-[20px]">
+            <h2
+              className="font-montserrat font-semibold text-white text-[12px] md:text-[20px]"
+              onClick={onOpenModal}
+            >
               New route
             </h2>
           </div>
