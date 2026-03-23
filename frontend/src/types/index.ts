@@ -6,10 +6,11 @@ export interface Stop {
   order_number: number;
 }
 
-export type RouteStatus = "PENDING" | "OPTIMIZED";
+export type RouteStatus = "pending" | "OPTIMIZED";
 
 export interface Route {
   id: string;
+  name: string;
   starting_position: string;
   start_latitude: number;
   start_longitude: number;
