@@ -6,9 +6,10 @@ import RouteCard from "./RouteCard";
 interface Props {
   selectedId: string | null;
   onSelect: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-const SideBar = ({ selectedId, onSelect }: Props) => {
+const SideBar = ({ selectedId, onSelect, onDelete }: Props) => {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,6 +39,7 @@ const SideBar = ({ selectedId, onSelect }: Props) => {
               route={route}
               isSelected={selectedId === route.id}
               onSelect={onSelect}
+              onDelete={onDelete}
             />
           ))
         )}

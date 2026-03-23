@@ -6,7 +6,7 @@ export interface Stop {
   order_number: number;
 }
 
-export type RouteStatus = "pending" | "OPTIMIZED";
+export type RouteStatus = "PENDING" | "OPTIMIZED";
 
 export interface Route {
   id: string;

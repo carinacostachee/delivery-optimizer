@@ -8,9 +8,16 @@ interface Props {
   onSelect: (id: string) => void;
   isOpen: boolean;
   onClose: () => void;
+  onDelete: (id: string) => void;
 }
 
-const DrawerSide = ({ selectedId, onSelect, isOpen, onClose }: Props) => {
+const DrawerSide = ({
+  selectedId,
+  onSelect,
+  isOpen,
+  onClose,
+  onDelete,
+}: Props) => {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,13 +30,10 @@ const DrawerSide = ({ selectedId, onSelect, isOpen, onClose }: Props) => {
   return (
     <>
       {isOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black/30"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 z-[1001] bg-black/30" onClick={onClose} />
       )}
       <div
-        className={`fixed top-0 left-0 z-40 h-screen w-[320px] bg-white border-r-2 border-gray-200 flex flex-col transition-transform duration-300 ${
+        className={`fixed top-0 left-0 z-[1002] h-screen w-[320px] bg-white border-r-2 border-gray-200 flex flex-col transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -74,6 +78,7 @@ const DrawerSide = ({ selectedId, onSelect, isOpen, onClose }: Props) => {
                 route={route}
                 isSelected={selectedId === route.id}
                 onSelect={onSelect}
+                onDelete={onDelete}
               />
             ))
           )}

@@ -2,13 +2,21 @@ import type { Route } from "../types";
 import stopLogo from "../icons/package.svg";
 import esttime from "../icons/estimatedtime.svg";
 import lane from "../icons/lane.svg";
+import deleteButton from "../icons/delete.svg";
+import { useState } from "react";
+import { deleteRoute } from "../api/routes";
 interface Props {
   route: Route;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-const RouteCard = ({ route, isSelected, onSelect }: Props) => {
+const RouteCard = ({ route, isSelected, onSelect, onDelete }: Props) => {
+  const handleDeleteRoute = async () => {
+    await deleteRoute(route.id);
+    onDelete(route.id);
+  };
   return (
     <div
       onClick={() => onSelect(route.id)}
@@ -29,6 +37,15 @@ const RouteCard = ({ route, isSelected, onSelect }: Props) => {
         >
           {route.status}
         </span>
+        <img
+          src={deleteButton}
+          alt="Delete button"
+          className="w-[15px] h-[15px]"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteRoute();
+          }}
+        />
       </div>
       <p className="text-xs text-slate-400 mt-1">{route.starting_position}</p>
       <div className="flex flex-row justify-start items-center gap-[12px] ml-3 mt-3">
@@ -41,7 +58,7 @@ const RouteCard = ({ route, isSelected, onSelect }: Props) => {
         <div className="flex flex-row items-center gap-[5px]">
           <img src={esttime} alt="time logo" className="w-5 h-5" />
           <h2 className="font-montserrat text-semibold text-slate-400 text-[10px] md:text-[15px]">
-            {route.status === "pending"
+            {route.status === "PENDING"
               ? "0 min"
               : `${route.estimated_time} min`}
           </h2>
@@ -49,7 +66,7 @@ const RouteCard = ({ route, isSelected, onSelect }: Props) => {
         <div className="flex flex-row items-center gap-[5px]">
           <img src={lane} alt="distance logo" className="w-5 h-5" />
           <h2 className="font-montserrat text-semibold text-slate-400 text-[10px] md:text-[15px]">
-            {route.status === "pending" ? "0 km" : `${route.total_distance} km`}
+            {route.status === "PENDING" ? "0 km" : `${route.total_distance} km`}
           </h2>
         </div>
       </div>

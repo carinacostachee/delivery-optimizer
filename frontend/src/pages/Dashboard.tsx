@@ -3,22 +3,35 @@ import SideBar from "../components/SideBar";
 import DrawerSide from "../components/DrawerSide";
 import { useEffect, useState } from "react";
 import type { Route } from "../types";
-import { getRoute } from "../api/routes";
+import { getRoute, postOptimizeRoute } from "../api/routes";
 
 const Dashboard = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (!selectedId) return;
     getRoute(selectedId).then(setSelectedRoute);
   }, [selectedId]);
 
+  const handleOptimize = async () => {
+    if (!selectedId) return;
+    await postOptimizeRoute(selectedId);
+    getRoute(selectedId).then(setSelectedRoute);
+    setRefreshKey((k) => k + 1);
+  };
+
   return (
     <div className="flex flex-1 overflow-hidden">
       <div className="hidden md:block w-[320px] shrink-0 bg-white border-r-2 border-gray-200">
-        <SideBar selectedId={selectedId} onSelect={setSelectedId} />
+        <SideBar
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onDelete={() => setRefreshKey((k) => k + 1)}
+          key={refreshKey}
+        />
       </div>
 
       <main className="flex-1 bg-slate-50 flex items-start justify-start relative p-6">
@@ -40,7 +53,7 @@ const Dashboard = () => {
           </svg>
         </button>
 
-        <MapSection route={selectedRoute} />
+        <MapSection route={selectedRoute} onOptimize={handleOptimize} />
       </main>
 
       <DrawerSide
