@@ -1,4 +1,4 @@
-# 🚚 CC Route Optimizer
+# CC Route Optimizer
 
 A full-stack delivery route optimization app built with **FastAPI**, **MongoDB**, and **React**. Enter a warehouse location and delivery stops, and the app automatically geocodes the addresses and calculates the most efficient delivery route using the **Nearest Neighbour algorithm**.
 
@@ -6,19 +6,19 @@ Built as a personal project.
 
 ---
 
-## ✨ Features
+##  Features
 
-- 📍 **Automatic geocoding** — type any address and get real coordinates
-- 🧠 **Route optimization** — Nearest Neighbour algorithm finds the most efficient stop order
-- 🗺️ **Interactive map** — visualize routes on a live Amsterdam map with React Leaflet
-- 📊 **Route stats** — total distance (Haversine formula) and estimated duration
-- ➕ **Create routes** — add routes with up to 8 stops via a modal form
-- 🗑️ **Delete routes** — remove routes from the sidebar
-- 📱 **Responsive** — drawer sidebar for mobile, grid layout for desktop
+-  **Automatic geocoding** — type any address and get real coordinates
+-  **Route optimization** — Nearest Neighbour algorithm finds the most efficient stop order
+-  **Interactive map** — visualize routes on a live Amsterdam map with React Leaflet
+-  **Route stats** — total distance (Haversine formula) and estimated duration
+-  **Create routes** — add routes with up to 8 stops via a modal form
+-  **Delete routes** — remove routes from the sidebar
+-  **Responsive** — drawer sidebar for mobile, grid layout for desktop
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 | Tool | Purpose |
@@ -39,7 +39,7 @@ Built as a personal project.
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 ```
 delivery-optimizer/
 ├── backend/
@@ -62,7 +62,7 @@ delivery-optimizer/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Python 3.10+
@@ -101,7 +101,7 @@ App will be available at `http://localhost:5174`
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -113,7 +113,7 @@ App will be available at `http://localhost:5174`
 
 ---
 
-## 🧠 How the Optimization Works
+##  How the Optimization Works
 
 1. **Geocoding** — each address is converted to lat/lng coordinates using OpenStreetMap's Nominatim API
 2. **Distance matrix** — Haversine formula calculates real-world distances between all stops
@@ -123,7 +123,7 @@ App will be available at `http://localhost:5174`
 
 ---
 
-## 🔮 Planned Features
+## Planned Features
 
 - [ ] Authentication — courier login
 - [ ] Real-time route tracking
@@ -132,7 +132,7 @@ App will be available at `http://localhost:5174`
 
 ---
 
-## 👩‍💻 Author
+##  Author
 
 Built by **Carina Costache**  
 Master's student in Software Engineering 
