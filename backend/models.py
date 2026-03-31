@@ -11,6 +11,12 @@ class UserEnum(str, Enum):
     USER="USER"
     ADMIN="ADMIN"
 
+class AuditEnum(str, Enum):
+    CREATE_ROUTE="CREATE_ROUTE"
+    OPTIMIZE_ROUTE="OPTIMIZE_ROUTE"
+    DELETE_ROUTE="DELETE_ROUTE"
+
+
 # this model is for a stop in the route with a name, address, geographical coordinates 
 # and the a number which we need to see in which order the delivery is done 
 class Stop(BaseModel):
@@ -55,3 +61,14 @@ class User(BaseModel):
     name: str
     role: UserEnum= UserEnum.USER
     created_at: datetime=None
+
+class AuditLogEntry(BaseModel):
+    user_id: str
+    email: str
+    route_id: str
+    ip_address: str
+    action: AuditEnum
+    created_at: datetime = None
+    request_method: str
+    request_path: str
+    status_code: int = 200

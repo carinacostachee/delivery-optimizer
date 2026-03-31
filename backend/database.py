@@ -16,3 +16,6 @@ routes_collection= db["routes"]
 
 #reference to the users collection
 users_collection = db["users"]
+
+#reference to the audit collection
+audit_collection= db["audit"]
