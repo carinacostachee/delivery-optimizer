@@ -27,6 +27,7 @@ class AddRoute(BaseModel):
 #this is the full route model 
 class Route(BaseModel):
     id: Optional[str]= None
+    name: str = ""
     starting_position: str
     start_latitude: Optional[float] = None
     start_longitude: Optional[float] = None

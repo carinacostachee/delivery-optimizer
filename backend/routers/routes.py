@@ -22,7 +22,7 @@ def create_route(route: AddRoute):
     
     #convert into a dict 
     route_doc=route.model_dump()
-    route_doc["status"]="pending"
+    route_doc["status"]="PENDING"
     route_doc["created_at"] = datetime.now()
 
     #call geocode_route to get the latitude and longitude
