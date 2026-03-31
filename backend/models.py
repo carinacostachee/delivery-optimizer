@@ -40,6 +40,7 @@ class Route(BaseModel):
     total_distance: Optional[float] = None
     estimated_time: Optional[int] = None
     created_at: datetime = None
+    created_by: str
 
 
 

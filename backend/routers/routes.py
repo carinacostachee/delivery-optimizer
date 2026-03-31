@@ -1,10 +1,11 @@
 
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from database import routes_collection
 from models import AddRoute, serialize_route
 from services.geocoding import geocode_route
 from services.optimizer import optimize_route
+from auth import get_current_user, require_role
 from bson import ObjectId
 from datetime import datetime
 
@@ -12,18 +13,22 @@ router = APIRouter()
 
 #get request for list of all the routes to display on the page
 @router.get("/routes")
-def get_all_routes():
-    routes = list(routes_collection.find())
+def get_all_routes(current_user: dict=Depends(get_current_user)):
+    if current_user["role"] == "ADMIN":
+        routes = list(routes_collection.find())
+    else:
+        routes = list(routes_collection.find({"created_by": current_user["firebase_uid"]}))
     return [serialize_route(r) for r in routes]
 
 #post request to add a new route 
 @router.post("/routes")
-def create_route(route: AddRoute):
+def create_route(route: AddRoute, current_user: dict=Depends(get_current_user)):
     
     #convert into a dict 
     route_doc=route.model_dump()
     route_doc["status"]="PENDING"
     route_doc["created_at"] = datetime.now()
+    route_doc["created_by"] = current_user["firebase_uid"]
 
     #call geocode_route to get the latitude and longitude
     document=geocode_route(route_doc)
@@ -35,25 +40,32 @@ def create_route(route: AddRoute):
 
 #get request to get a specific route
 @router.get("/routes/{id}")
-def get_route(id: str):
+def get_route(id: str,current_user: dict=Depends(get_current_user)):
     route=routes_collection.find_one({"_id": ObjectId(id)})
     if not route:
         raise HTTPException(status_code=404, detail="Route not found")
+    if current_user["role"] != "ADMIN" and route["created_by"] != current_user["firebase_uid"]:
+        raise HTTPException(status_code=403, detail="Access forbidden!")
     return serialize_route(route)
 
 
 #delete a specific route
 @router.delete("/routes/{id}")
-def delete_route(id: str):
-    result = routes_collection.delete_one({"_id": ObjectId(id)})
-    if result.deleted_count == 0:
+def delete_route(id: str, current_user: dict=Depends(get_current_user)):
+    route=routes_collection.find_one({"_id": ObjectId(id)})
+    if not route:
         raise HTTPException(status_code=404, detail="Route not found")
+    if current_user["role"] != "ADMIN" and route["created_by"] != current_user["firebase_uid"]:
+        raise HTTPException(status_code=403, detail="You are not allowed to delete this route!")
+    routes_collection.delete_one({"_id": ObjectId(id)})
+    
+    
     return {"message": "Route deleted!"}
 
 
 #post request to optimize a specific route
 @router.post("/routes/{id}/optimize")
-def get_optimized_route(id: str):
+def get_optimized_route(id: str,current_user: dict=Depends(get_current_user)):
     route= routes_collection.find_one({"_id":ObjectId(id)})
     if not route:
         raise HTTPException(status_code=404, detail="Route not found")
