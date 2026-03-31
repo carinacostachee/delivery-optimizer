@@ -13,3 +13,6 @@ db= client[os.getenv("DB_NAME")]
 
 #reference to the routes collection
 routes_collection= db["routes"]
+
+#reference to the users collection
+users_collection = db["users"]

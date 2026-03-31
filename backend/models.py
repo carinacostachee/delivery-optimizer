@@ -7,6 +7,10 @@ class RouteEnum(str, Enum):
     PENDING="PENDING"
     OPTIMIZED="OPTIMIZED"
 
+class UserEnum(str, Enum):
+    USER="USER"
+    ADMIN="ADMIN"
+
 # this model is for a stop in the route with a name, address, geographical coordinates 
 # and the a number which we need to see in which order the delivery is done 
 class Stop(BaseModel):
@@ -42,3 +46,11 @@ class Route(BaseModel):
 def serialize_route(doc: dict) -> dict:
     doc["id"] = str(doc.pop("_id"))
     return doc
+
+
+class User(BaseModel):
+    email: str
+    firebase_uid: str 
+    name: str
+    role: UserEnum= UserEnum.USER
+    created_at: datetime=None
