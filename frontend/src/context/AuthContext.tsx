@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { api } from "../api/routes";
 import {
   onAuthStateChanged,
   type User,
@@ -17,6 +17,7 @@ interface AuthContextType {
 
   register(name: string, email: string, password: string): void;
   login(email: string, password: string): void;
+  logInWithGoogle(): Promise<void>;
   logout(): void;
   isAuthenticated: boolean;
 }
@@ -25,7 +26,7 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(null);
-  const [userLoggedIn, setUserLoggedIn] = React.useState<boolean>(false);
+
   const [token, setToken] = React.useState<string | null>(null);
   const [userProfile, setUserProfile] = React.useState<any>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -49,7 +50,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function register(name: string, email: string, password: string) {
-    return await createUserWithEmailAndPassword(auth, email, password);
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    await api.post("/users/signup", {
+      firebase_uid: result.user.uid,
+      email: email,
+      name: name,
+    });
   }
 
   async function login(email: string, password: string) {
@@ -61,17 +67,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function logInWithGoogle() {
-    return await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, provider);
   }
 
   const isAuthenticated = !!user;
 
   const value = {
     user,
-    userLoggedIn,
     token,
     userProfile,
-    loading,
     register,
     login,
     logout,
@@ -80,7 +84,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
   return (
     <AuthContext.Provider value={value}>
-      {loading ? <div>The app is loading</div> : children}
+      {loading ? (
+        <div className="bg-slate-50 w-full h-full flex flex-col justy-center items-center"></div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 }

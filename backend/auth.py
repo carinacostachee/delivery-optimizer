@@ -1,5 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials
+from firebase_admin import auth as firebase_auth
 from dotenv import load_dotenv
 import os
 from fastapi import Request, HTTPException, Depends
@@ -13,20 +14,24 @@ delivery_optimizer = firebase_admin.initialize_app(cred)
 #now we create the fastAPI dependency to get the current user
 def get_current_user(request: Request) -> dict:
     header=request.headers.get("authorization")
+    print("AUTH HEADER:", header)
     #now we check to see if the header exists or if it starts with the type "Bearer"
     if not header or not header.startswith('Bearer '):
-        return None
+        raise HTTPException(status_code=401, detail="Not authenticated")
     #we can extract the token now that we know that the header exists and we split the Bearer from the token and extract the token with pop
     firebase_id_token=header.split(' ').pop()
     try:
-        decoded_token=firebase_admin.auth.verify_id_token(firebase_id_token)
+        decoded_token=firebase_auth.verify_id_token(firebase_id_token)
         #now we have the uid we need to match it to an user in the database
         uid=decoded_token['uid']
+        print("DECODED UID:", uid)
         user=users_collection.find_one({"firebase_uid":uid})
+        print("FOUND USER:", user)
         if user is None:
             raise HTTPException(status_code=401, detail="User not found")
         return user
-    except Exception:
+    except Exception as e:
+        print("AUTH ERROR:", e)
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 

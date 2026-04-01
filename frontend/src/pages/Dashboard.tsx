@@ -25,16 +25,23 @@ const Dashboard = () => {
 
   const handleOptimize = async () => {
     if (!selectedId) return;
-    await postOptimizeRoute(selectedId);
-    getRoute(selectedId).then(setSelectedRoute);
-    setRefreshKey((k) => k + 1);
+    try {
+      await postOptimizeRoute(selectedId);
+      getRoute(selectedId).then(setSelectedRoute);
+      setRefreshKey((k) => k + 1);
+    } catch (error: any) {
+      alert(
+        error.response?.data?.detail ||
+          "Failed to optimize route, check that the addresses exist!",
+      );
+    }
   };
 
   return (
     <div className="flex flex-col h-full">
       <Header onOpenModal={toggleModal} />
       <div className="flex flex-1 overflow-hidden">
-        <div className="hidden md:block w-[320px] shrink-0 bg-white border-r-2 border-gray-200">
+        <div className="hidden md:flex md:flex-col w-[320px] shrink-0 bg-white border-r-2 border-gray-200 overflow-hidden">
           <SideBar
             selectedId={selectedId}
             onSelect={setSelectedId}
@@ -43,7 +50,7 @@ const Dashboard = () => {
           />
         </div>
 
-        <main className="flex-1 bg-slate-50 flex items-start justify-start relative p-6">
+        <main className="flex-1 bg-slate-50 flex flex-col overflow-hidden relative p-4 lg:p-6">
           <button
             className="md:hidden absolute top-4 left-4 z-20 p-2 bg-white rounded-lg shadow border border-gray-200"
             onClick={() => setDrawerOpen(true)}

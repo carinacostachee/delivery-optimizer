@@ -16,11 +16,11 @@ interface Props {
 
 const MapView = ({ route, onOptimize }: Props) => {
   return (
-    <div className="w-full">
+    <div className="relative flex-1 min-h-[250px]">
       <MapContainer
         center={[52.3676, 4.9041]}
         zoom={13}
-        style={{ height: "500px", width: "100%" }}
+        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"

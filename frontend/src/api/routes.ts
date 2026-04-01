@@ -1,8 +1,18 @@
 import axios from "axios";
 import type { Route } from "../types";
 import type { AddRoute } from "../types";
-const api = axios.create({
+import { auth } from "../config/firebase";
+export const api = axios.create({
   baseURL: "http://localhost:8000",
+});
+
+api.interceptors.request.use(async (config) => {
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export const fetchAllRoutes = async (): Promise<Route[]> => {

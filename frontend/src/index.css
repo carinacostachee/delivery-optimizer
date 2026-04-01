@@ -4,6 +4,16 @@
   --font-montserrat: "Montserrat", system-ui, sans-serif;
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+}
+
 /* Fix Leaflet tiles broken by Tailwind's img reset */
 .leaflet-container img {
   max-width: none !important;

@@ -32,6 +32,11 @@ def create_route(route: AddRoute, request: Request, current_user: dict=Depends(g
 
     #call geocode_route to get the latitude and longitude
     document=geocode_route(route_doc)
+    if document.get("start_latitude") is None:
+        raise HTTPException(status_code=400, detail=f"Could not find address: {route_doc['starting_position']}")
+    for stop in document["stops"]:
+        if stop.get("latitude") is None:
+            raise HTTPException(status_code=400, detail=f"Could not find address: {stop['address']}")
     #insert the document into MongoDB
     result=routes_collection.insert_one(document)
     inserted_doc=routes_collection.find_one({"_id": result.inserted_id})

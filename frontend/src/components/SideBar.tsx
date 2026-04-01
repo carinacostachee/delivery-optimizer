@@ -19,7 +19,7 @@ const SideBar = ({ selectedId, onSelect, onDelete }: Props) => {
       .finally(() => setLoading(false));
   }, []);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex w-full h-[20px] md:h-[60px] border-b-2 border-gray-200 justify-start items-center">
         <div className="ml-10 font-montserrat text-gray-500 text-semibold">
           SAVED ROUTES
