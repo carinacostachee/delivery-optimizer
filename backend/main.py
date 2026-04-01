@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import routes
-from routers import users
-app= FastAPI(title="Delivery Optimizer API")
+from routers import routes, users
+
+app = FastAPI(title="Delivery Optimizer API")
 
 
 app.add_middleware(
@@ -13,6 +13,7 @@ app.add_middleware(
 )
 app.include_router(routes.router)
 app.include_router(users.router)
+
 
 @app.get("/")
 def root():
