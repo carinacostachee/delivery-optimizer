@@ -149,6 +149,35 @@ Roles are stored in MongoDB. Users are assigned `USER` by default on signup.
 
 ---
 
+## Testing
+
+The backend has a test suite covering the optimization logic, API endpoints, and database operations.
+
+### Test files
+
+| File | What it tests |
+|------|--------------|
+| `tests/test_optimizer.py` | Haversine distance, distance matrix, nearest neighbour algorithm, route optimization |
+| `tests/test_routes.py` | Route CRUD endpoints, access control, audit log on route creation |
+| `tests/test_users.py` | User profile endpoint, signup, audit log access |
+| `tests/test_database.py` | MongoDB operations: insert, find, update, delete on all three collections |
+
+### Running the tests
+
+```bash
+cd backend
+source venv/bin/activate
+pytest tests/ -v
+```
+
+### Dependencies
+
+```bash
+pip install pytest mongomock
+```
+
+`mongomock` is used in `test_database.py` to run MongoDB tests without a real database connection.
+
 ## Planned Features
 
 - [ ] Real-time route tracking
