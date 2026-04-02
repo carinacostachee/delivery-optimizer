@@ -152,3 +152,50 @@ def test_delete_route_returns_404_if_route_does_not_exist():
         mock_col.find_one.return_value = None
         response = client.delete("/routes/000000000000000000000000")
         assert response.status_code == 404
+
+
+def test_create_route_writes_audit_log():
+    """
+    GIVEN: a user that is logged in
+    WHEN:  they create a new route
+    THEN:  an audit log entry with action CREATE_ROUTE should be written to the database
+    """
+    with patch("routers.routes.routes_collection") as mock_routes, patch(
+        "routers.routes.audit_collection"
+    ) as mock_audit, patch("routers.routes.geocode_route") as mock_geocode:
+
+        mock_geocode.return_value = {
+            "name": "Test Route",
+            "starting_position": "Amsterdam",
+            "start_latitude": 52.37,
+            "start_longitude": 4.89,
+            "stops": [],
+            "status": "PENDING",
+            "created_at": None,
+            "created_by": "test_uid_123",
+        }
+        mock_routes.insert_one.return_value.inserted_id = "abc123"
+        mock_routes.find_one.return_value = {
+            "_id": "abc123",
+            "name": "Test Route",
+            "starting_position": "Amsterdam",
+            "start_latitude": 52.37,
+            "start_longitude": 4.89,
+            "stops": [],
+            "status": "PENDING",
+            "created_by": "test_uid_123",
+        }
+
+        client.post(
+            "/routes",
+            json={
+                "name": "Test Route",
+                "starting_position": "Amsterdam",
+                "stops": [],
+            },
+        )
+
+        mock_audit.insert_one.assert_called_once()
+        call_args = mock_audit.insert_one.call_args[0][0]
+        assert call_args["action"] == "CREATE_ROUTE"
+        assert call_args["email"] == "test@gmail.com"
