@@ -89,8 +89,9 @@ pip install -r requirements.txt
 
 Create a `.env` file in `backend/`:
 ```
-MONGO_URI=your_mongodb_connection_string
-FIREBASE_CREDENTIALS=path_to_your_firebase_service_account.json
+MONGO_URL=your_mongodb_connection_string
+FIREBASE_CREDENTIALS_PATH=path_to_your_firebase_service_account.json
+DB_NAME=route_optimizer
 ```
 
 Start the server:
