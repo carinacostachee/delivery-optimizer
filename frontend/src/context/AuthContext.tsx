@@ -38,6 +38,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(firebaseUser);
         const token = await firebaseUser.getIdToken();
         setToken(token);
+        try {
+          const response = await api.get("/users/me");
+          setUserProfile(response.data);
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
       } else {
         //here the user is logged out so we set everything back to the initial state
         setUser(null);

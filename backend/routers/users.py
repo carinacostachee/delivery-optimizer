@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from auth import get_current_user
-from database import users_collection
+from database import audit_collection, users_collection
 from fastapi import APIRouter, Depends, HTTPException
-from models import User
+from models import User, serialize_audit
 
 router = APIRouter()
 
@@ -26,7 +26,22 @@ def create_user(user_data: User):
     return inserted_doc
 
 
+# we needed this endpoint in order to user userProfile.role to only display the audit
+# page if the user is an admin
 @router.get("/users/me")
 def get_me(current_user: dict = Depends(get_current_user)):
     current_user["id"] = str(current_user.pop("_id"))
     return current_user
+
+
+# GET request to retrieve all the audit log entries we need for the Audit Log page
+@router.get("/audit")
+def get_audit_entries(current_user: dict = Depends(get_current_user)):
+    if current_user["role"] == "ADMIN":
+        audit_entries = list(audit_collection.find())
+    else:
+        raise HTTPException(
+            status_code=403,
+            detail="User does not have permission to access this information!",
+        )
+    return [serialize_audit(entry) for entry in audit_entries]

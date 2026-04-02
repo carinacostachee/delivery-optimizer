@@ -77,3 +77,8 @@ class AuditLogEntry(BaseModel):
     request_method: str
     request_path: str
     status_code: int = 200
+
+
+def serialize_audit(doc: dict) -> dict:
+    doc["id"] = str(doc.pop("_id"))
+    return doc
